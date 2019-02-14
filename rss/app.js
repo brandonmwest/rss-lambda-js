@@ -4,11 +4,9 @@ const xml2js = require('xml2js');
 const parseString = util.promisify(xml2js.parseString);
 const moment = require('moment');
 const Knex = require('knex');
-const {
-    Model
-} = require('objection');
-const Subscription = require('./models/subscription');
+const { Model } = require('objection');
 const Item = require('./models/item');
+const Subscription = require('./models/subscription');
 
 exports.lambdaHandler = async (event, context) => {
     const dbconfig = await require('./dbconfig'); //dbconfig exports an immediate async function

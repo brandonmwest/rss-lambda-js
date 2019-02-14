@@ -5,6 +5,19 @@ class Item extends Model {
     static get tableName() {
         return 'items';
     }
+
+    static get relationMappings() {
+        return {
+            subscription: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: __dirname + '/subscription',
+                join: {
+                    from: 'items.subscriptionId',
+                    to: 'subscriptions.id'
+                }
+            }
+        }        
+    }
 }
 
 module.exports = Item;

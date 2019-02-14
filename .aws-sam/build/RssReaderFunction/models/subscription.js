@@ -6,6 +6,19 @@ class Subscription extends Model {
     static get tableName() {
         return 'subscriptions';
     }
+
+    static get relationMappings() {
+        return {
+            items: {
+                relation: Model.HasManyRelation,
+                modelClass: __dirname + '/item',
+                join: {
+                    from: 'subscriptions.id',
+                    to: 'items.subscriptionId'
+                }
+            }
+        }        
+    }
 }
 
 module.exports = Subscription;
