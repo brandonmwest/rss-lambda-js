@@ -2,7 +2,7 @@
 # Created by https://www.gitignore.io/api/osx,node,linux,windows
 
 ### SAM ###
-.aws-sam
+.aws-sam/
 packaged.yaml
 
 ### Linux ###
@@ -79,7 +79,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
 
 ### OSX ###
 *.DS_Store
