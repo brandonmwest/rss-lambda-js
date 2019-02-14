@@ -22,8 +22,8 @@ class Item extends Model {
                 join: {
                     from: 'items.id',
                     through: {
-                        from: 'item_tags.itemId',
-                        to: 'item_tags.tagId'
+                        from: 'itemTags.itemId',
+                        to: 'itemTags.tagId'
                     },
                     to: 'tags.id'
                 }
