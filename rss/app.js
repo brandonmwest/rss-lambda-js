@@ -1,22 +1,23 @@
-const axios         = require('axios');
+const axios         = require('axios');     // http request library
 const util          = require('util');
-const xml2js        = require('xml2js');
+const xml2js        = require('xml2js');    // for turning RSS feeds into JS objects
 const parseString   = util.promisify(xml2js.parseString);
-const moment        = require('moment');
-const Knex          = require('knex');
-const { Model }     = require('objection');
+const moment        = require('moment');    // help for managing datetimes
+const Knex          = require('knex');      // SQL query builder
+const { Model }     = require('objection'); // ORM built on Knex
 const Item          = require('./models/item');
 const Subscription  = require('./models/subscription');
 const Tag           = require('./models/tag');
 
 exports.lambdaHandler = async (event, context) => {
-    const dbconfig = await require('./dbconfig'); //dbconfig exports an immediate async function
+    // dbconfig exports an immediate async function
+    const dbconfig = await require('./dbconfig'); 
     const knex = Knex(dbconfig.production);
 
     Model.knex(knex); // attach objection to knex
 
     try {
-        let feedTotals = await checkSubs();
+        let feedTotals = await checkSubscriptions();
         knex.destroy();
         console.log(feedTotals);
         context.succeed(feedTotals);
@@ -26,10 +27,8 @@ exports.lambdaHandler = async (event, context) => {
     }
 };
 
-const checkSubs = async () => {
-    let feedCount = 0;
-    let itemCount = 0;
-    let newItemCount = 0;
+const checkSubscriptions = async () => {
+    let feedCount, itemCount, newItemCount = 0;
 
     // get all active subscriptions
     let subscriptions = await Subscription.query()
@@ -60,8 +59,13 @@ const checkSubs = async () => {
 }
 
 const parseFeed = async (subscription) => {
+    // get the RSS feed's XML  
     let xml = await getXml(subscription.url);
+
+    // turn the XML into an object
     let xmlObj = await parseXml(xml);
+
+    // restructure the data so it's easier to use
     let feed = await buildFeed(xmlObj);
 
     return feed;
@@ -171,6 +175,7 @@ const saveItems = async (subscription, items) => {
                 content: item.summary
             });
 
+        // add any tags we haven't seen before
         await saveTags(item.tags, createdItem);
     }
 }
