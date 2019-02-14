@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'rss
+
+  A node.js Lambda function to check Stack Overflow RSS feeds and post new items to
+  Chime.
+
+  '
+Globals:
+  Function:
+    Environment:
+      Variables:
+        SECRET_NAME: rss_db_info
+    Timeout: 30
+Resources:
+  RssReaderFunction:
+    Properties:
+      CodeUri: RssReaderFunction
+      Events:
+        CheckFeeds:
+          Properties:
+            Schedule: rate(10 minutes)
+          Type: Schedule
+      Handler: app.lambdaHandler
+      Policies:
+      - Statement:
+        - Action:
+          - secretsmanager:GetSecretValue
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
