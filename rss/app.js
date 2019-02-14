@@ -10,20 +10,18 @@ const Subscription = require('./models/subscription');
 
 exports.lambdaHandler = async (event, context) => {
     const dbconfig = await require('./dbconfig'); //dbconfig exports an immediate async function
-   
-    const knex = Knex({
-        client: 'mysql',
-        connection: dbconfig
-    });
+    const knex = Knex(dbconfig.production);
 
     Model.knex(knex); // attach objection to knex
 
     try {
         let feedTotals = await checkSubs();
         knex.destroy();
+        console.log(feedTotals);
         context.succeed(feedTotals);
     } catch (err) {
         knex.destroy();
+        console.err(err);
         context.fail(err);
     }
 };
@@ -171,12 +169,6 @@ const saveItems = async (subscription, items) => {
             published: item.pubDate,
             content: item.summary
         });
-
-        for(const tag of item.tags){
-            newTag = await tag
-            .$relatedQuery('movies')
-            .insert({name: 'The room', awesomeness: 9001});
-        }
     }
 }
 
