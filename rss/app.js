@@ -28,7 +28,7 @@ exports.lambdaHandler = async (event, context) => {
 };
 
 const checkSubscriptions = async () => {
-    let feedCount, itemCount, newItemCount = 0;
+    let feedCount = 0 , itemCount = 0, newItemCount = 0;
 
     // get all active subscriptions
     let subscriptions = await Subscription.query()
