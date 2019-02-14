@@ -7,6 +7,7 @@ const Knex          = require('knex');
 const { Model }     = require('objection');
 const Item          = require('./models/item');
 const Subscription  = require('./models/subscription');
+const Tag           = require('./models/tag');
 
 exports.lambdaHandler = async (event, context) => {
     const dbconfig = await require('./dbconfig'); //dbconfig exports an immediate async function
@@ -21,7 +22,6 @@ exports.lambdaHandler = async (event, context) => {
         context.succeed(feedTotals);
     } catch (err) {
         knex.destroy();
-        console.err(err);
         context.fail(err);
     }
 };
@@ -149,6 +149,7 @@ const buildFeed = async function (xmlObj) {
 const filterItems = async (subscription, items) => {
     let cutoffTime = moment(subscription.feedUpdatedAt);
 
+    // if the feed hasn't been updated before, set the threshold for new items
     if (!cutoffTime.isValid()) {
         cutoffTime = moment();
     }
@@ -161,14 +162,35 @@ const filterItems = async (subscription, items) => {
 const saveItems = async (subscription, items) => {
     // add all the new items to the database
     for (const item of items) {
-        created = await Item.query()
-        .insert({
-            subscriptionId: subscription.id,
-            title: item.title,
-            url: item.link,
-            published: item.pubDate,
-            content: item.summary
-        });
+        createdItem = await Item.query()
+            .insert({
+                subscriptionId: subscription.id,
+                title: item.title,
+                url: item.link,
+                published: item.pubDate,
+                content: item.summary
+            });
+
+        await saveTags(item.tags, createdItem);
+    }
+}
+
+const saveTags = async (tags, item) => {
+    for(const tagName of tags){
+        let tag = await Tag.query()
+            .where({
+                name: tagName
+            });
+        
+        if(!tag.length)
+            tag = await Tag.query()
+            .insert({
+                name: tagName
+            });
+
+        const itemTag = await item
+            .$relatedQuery('tags')
+            .relate(tag);
     }
 }
 
