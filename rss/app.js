@@ -1,12 +1,12 @@
-const axios = require('axios');
-const util = require('util');
-const xml2js = require('xml2js');
-const parseString = util.promisify(xml2js.parseString);
-const moment = require('moment');
-const Knex = require('knex');
-const { Model } = require('objection');
-const Item = require('./models/item');
-const Subscription = require('./models/subscription');
+const axios         = require('axios');
+const util          = require('util');
+const xml2js        = require('xml2js');
+const parseString   = util.promisify(xml2js.parseString);
+const moment        = require('moment');
+const Knex          = require('knex');
+const { Model }     = require('objection');
+const Item          = require('./models/item');
+const Subscription  = require('./models/subscription');
 
 exports.lambdaHandler = async (event, context) => {
     const dbconfig = await require('./dbconfig'); //dbconfig exports an immediate async function
@@ -47,7 +47,7 @@ const checkSubs = async () => {
 
         await Subscription.query()
             .patch({
-                feedUpdatedAt: feed.lastBuildDate
+                feedUpdatedAt: feed.feedUpdatedAt
             })
             .where('id', sub.id)
 
@@ -104,7 +104,7 @@ const buildFeed = async function (xmlObj) {
         if (title) feed.title = title;
     }
     if (xmlObj.feed.updated) {
-        feed.lastBuildDate = xmlObj.feed.updated[0];
+        feed.feedUpdatedAt = xmlObj.feed.updated[0];
     }
 
     (xmlObj.feed.entry || []).forEach(entry => {
