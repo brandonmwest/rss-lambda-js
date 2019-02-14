@@ -4,14 +4,14 @@ SAM application that polls a list of RSS feeds, stores new entries, and sends a 
 
 Currently designed to work specifically with Stack Overflow question and user feeds.
 
-```bash
+```
 .
 ├── README.md
 ├── rss                         <-- Lambda function source code
 │   ├── models                  <-- ORM model definitions (objection.js)
 │   │   └── item.js             <-- Feed entries that belong to a subscription
 │   │   └── subscription.js     <-- RSS feed URL, callback URL, etc
-│   │   └── tag.js              <-- RSS tags
+│   │   └── tag.js              <-- Item tags
 │   ├── app.js                  <-- Lambda event handler definition
 │   ├── dbconfig.js             <-- Database connection info
 │   ├── package.json            <-- NodeJS dependencies
