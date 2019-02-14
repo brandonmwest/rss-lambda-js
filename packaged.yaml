@@ -14,7 +14,7 @@ Globals:
 Resources:
   RssReaderFunction:
     Properties:
-      CodeUri: s3://lambda-rss-reader/9254567961ad3932b756ba8521a2a0e8
+      CodeUri: s3://lambda-rss-reader/a5214d728eebeb41b617c7087c5561f7
       Events:
         CheckFeeds:
           Properties:

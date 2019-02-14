@@ -15,8 +15,20 @@ class Item extends Model {
                     from: 'items.subscriptionId',
                     to: 'subscriptions.id'
                 }
+            },
+            tags: {
+                relation: Model.ManyToManyRelation,
+                modelClass: __dirname + '/tag',
+                join: {
+                    from: 'items.id',
+                    through: {
+                        from: 'item_tags.itemId',
+                        to: 'item_tags.tagId'
+                    },
+                    to: 'tags.id'
+                }
             }
-        }        
+        }
     }
 }
 
