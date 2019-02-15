@@ -1,8 +1,10 @@
 # rss-lambda-js
 
-SAM application that polls a list of RSS feeds, stores new entries, and sends a notification about each new entry to a callback URL.
+TL:DR; new rss entry -> database -> webhook POST
 
-Currently designed to work specifically with Stack Overflow question and user feeds.
+This is an [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) application that polls a list of RSS feeds, stores new entries, and sends a notification about each new entry to a callback URL.
+
+It is currently designed to work specifically with [Stack Overflow question feeds](https://stackoverflow.com/feeds/tag?tagnames=node.js&sort=newest) and [user feeds](https://stackoverflow.com/feeds/user/401096).
 
 ```
 .
