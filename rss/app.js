@@ -73,23 +73,13 @@ const parseFeed = async (subscription) => {
 
 const getXml = async (url) => {
     let response;
-    try {
-        response = await axios.get(url);
-        return response.data;
-    } catch (err) {
-        console.log(err);
-    }
+    response = await axios.get(url);
+    return response.data;
 }
 
 const parseXml = async (xml) => {
     let json;
-
-    try {
-        json = await parseString(xml);
-    } catch (err) {
-        console.log(err);
-    }
-
+    json = await parseString(xml);
     return json;
 }
 
@@ -205,18 +195,13 @@ const sendCallbacks = async (subscription, items) => {
     const promises = items.map(async (item) => {
         let message = buildChatMessage(item);
 
-        try {
-            let ret = await axios({
-                method: 'post',
-                url: callbackUrl,
-                data: {
-                    "Content": message
-                }
-            });
-        } catch (err) {
-            console.log(err);
-            return err;
-        }
+        let ret = await axios({
+            method: 'post',
+            url: callbackUrl,
+            data: {
+                "Content": message
+            }
+        });
     })
 
     await Promise.all(promises);
